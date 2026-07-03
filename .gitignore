@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Build output (rebuilt on publish via prepublishOnly)
+dist
+
+# Local secrets and machine-specific config
+.env
+.env.*
+mcp.local.json
+
+# Internal API spec (not needed by customers)
+openapi.json
+
+# Lockfile (library package; consumers resolve their own deps)
+package-lock.json
+
+# OS noise
+.DS_Store

@@ -1,0 +1,10 @@
+{
+  "name": "billingserv",
+  "description": "Connect AI assistants to BillingServ: customers, invoices, orders, packages, and revenue reports.",
+  "version": "0.1.6",
+  "author": {
+    "name": "BillingServ",
+    "url": "https://www.billingserv.com"
+  },
+  "homepage": "https://github.com/billingserv/mcp"
+}

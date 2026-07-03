@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "billingserv": {
+      "command": "npx",
+      "args": ["-y", "@billingserv/mcp-server"],
+      "env": {
+        "BILLINGSERV_API_BASE_URL": "${BILLINGSERV_API_BASE_URL}",
+        "BILLINGSERV_API_KEY": "${BILLINGSERV_API_KEY}"
+      }
+    }
+  }
+}

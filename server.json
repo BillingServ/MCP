@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.billingserv/mcp",
+  "description": "MCP server for BillingServ: customers, invoices, orders, packages, and revenue reports.",
+  "repository": {
+    "url": "https://github.com/billingserv/mcp",
+    "source": "github"
+  },
+  "version": "0.1.8",
+  "websiteUrl": "https://www.billingserv.com",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@billingserv/mcp-server",
+      "version": "0.1.8",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "BILLINGSERV_API_BASE_URL",
+          "description": "BillingServ API v2 base URL, e.g. https://billing.example.com/api/v2",
+          "isRequired": true,
+          "isSecret": false
+        },
+        {
+          "name": "BILLINGSERV_API_KEY",
+          "description": "BillingServ API key",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "BILLINGSERV_TIMEOUT_MS",
+          "description": "Request timeout in milliseconds (default 15000)",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}
