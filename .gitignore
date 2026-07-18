@@ -8,6 +8,7 @@ dist
 .env
 .env.*
 mcp.local.json
+/publish-local.sh
 
 # Internal API spec (not needed by customers)
 openapi.json
