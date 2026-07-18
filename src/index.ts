@@ -70,6 +70,7 @@ type WriteEndpointDefinition = {
   path: string;
   description: string;
   requiredBodyParams?: readonly string[];
+  authenticated?: boolean;
 };
 
 const WRITE_ENDPOINTS = [
@@ -81,15 +82,18 @@ const WRITE_ENDPOINTS = [
   { path: 'invoice/send-invoice-reminder', description: 'Send a payment reminder for an invoice to the customer. Required body: invoice_id.', requiredBodyParams: ['invoice_id'] },
   { path: 'marketing/create-discount', description: 'Create a discount. Required body: minimum_value, discount_value, start, type (0 = percentage, 1 = fixed/code), recurring (0 or 1), uses. Optional: end, selected_packages.', requiredBodyParams: ['minimum_value', 'discount_value', 'start', 'type', 'recurring', 'uses'] },
   { path: 'order/add-order', description: 'Create an order for a customer. Required body: customer_id, package_id, cycle_id, price. Optional package options as parallel arrays: options.id, options.amount, options.value, options.cycle_type.', requiredBodyParams: ['customer_id', 'package_id', 'cycle_id', 'price'] },
-  { path: 'package/create', description: 'Create a package in a package group. Required body: group_id, name. Optional: description, tax, url, prorate (Y or N), trial (days), featured (0 or 1), options (array of package option ids), upgrade_paths (array), and billing cycles as parallel arrays: cycle.cycle (cycle type id: 1 One-Off, 2 Daily, 3 Weekly, 4 Fortnightly, 5 Monthly, 7 Every 3 Months, 10 Every 6 Months, 16 Every 12 Months, 17 Every 24 Months, 18 Every 36 Months), cycle.price, cycle.setup (setup fee). Example: cycle.cycle [5], cycle.price [10], cycle.setup [0] adds a Monthly $10 cycle with no setup fee. Also optional: theme (order page theme: 1 = ecommerce view, 2 = simple; defaults to 2), qty (stock quantity), is_outofstock (0 or 1).', requiredBodyParams: ['group_id', 'name'] },
+  { path: 'package/create', description: 'Create a package in a package group. Required body: group_id, name. Optional: description, tax, url, prorate (Y or N), trial (days), featured (0 or 1), options (array of package option ids), upgrade_paths (array), and billing cycles as parallel arrays: cycle.cycle (cycle type id: 1 One-Off, 2 Daily, 3 Weekly, 4 Fortnightly, 5 Monthly, 7 Every 3 Months, 10 Every 6 Months, 16 Every 12 Months, 17 Every 24 Months, 18 Every 36 Months), cycle.price, cycle.setup (setup fee). Example: cycle.cycle [5], cycle.price [10], cycle.setup [0] adds a Monthly $10 cycle with no setup fee. Also optional: theme (order page theme: 1 = ecommerce view, 2 = simple; defaults to 2), qty (stock quantity), is_outofstock (0 or 1), and digital_delivery settings. digital_delivery supports delivery_enabled, download_policy (open, cap_limited, or time_limited), max_downloads, link_expiry_hours, watermark_pdfs, licensing_enabled, activation_limit, customer_license_management, maximum_reissues, enforce_domain, enforce_ip, enforce_installation_path, license_key_prefix, license_key_length, and offline_cache_minutes.', requiredBodyParams: ['group_id', 'name'] },
   { path: 'package/group/create', description: 'Create a package group. Required body: name, type (integer). Optional: description.', requiredBodyParams: ['name', 'type'] },
   { path: 'package/group/update', description: 'Update a package group. Required body: id, name, type (integer). Optional: description.', requiredBodyParams: ['id', 'name', 'type'] },
   { path: 'package/option/create', description: 'Create a package option. Required body: internal_name, display_name, field_type (integer). Optional: options (array), required (Y or N).', requiredBodyParams: ['internal_name', 'display_name', 'field_type'] },
   { path: 'package/option/update', description: 'Update a package option. Required body: id, internal_name, display_name, field_type (integer). Optional: options (array), required (Y or N).', requiredBodyParams: ['id', 'internal_name', 'display_name', 'field_type'] },
-  { path: 'package/update', description: 'Update a package. Required body: id, group_id, name. Optional: description, tax, url, prorate (Y or N), trial (days), featured (0 or 1), options (array of package option ids; replaces existing options), upgrade_paths (array), keep (array of existing file ids to retain; existing files not listed are deleted), and billing cycles as parallel arrays: cycle.id, cycle.cycle (cycle type id: 1 One-Off, 2 Daily, 3 Weekly, 4 Fortnightly, 5 Monthly, 7 Every 3 Months, 10 Every 6 Months, 16 Every 12 Months, 17 Every 24 Months, 18 Every 36 Months), cycle.price, cycle.setup (setup fee). cycle.id is required to change cycles: pass an existing cycle id to update that cycle, or null to add a new one. Example: cycle.id [null], cycle.cycle [5], cycle.price [10], cycle.setup [0] adds a Monthly $10 cycle with no setup fee. Existing cycles whose id is not listed in cycle.id are deleted; omit all cycle fields to leave cycles unchanged. Also optional: theme (order page theme: 1 = ecommerce view, 2 = simple), qty (stock quantity), is_outofstock (0 or 1).', requiredBodyParams: ['id', 'group_id', 'name'] },
+  { path: 'package/update', description: 'Update a package. Required body: id, group_id, name. Optional: description, tax, url, prorate (Y or N), trial (days), featured (0 or 1), options (array of package option ids; replaces existing options), upgrade_paths (array), keep (array of existing file ids to retain; existing files not listed are deleted), and billing cycles as parallel arrays: cycle.id, cycle.cycle (cycle type id: 1 One-Off, 2 Daily, 3 Weekly, 4 Fortnightly, 5 Monthly, 7 Every 3 Months, 10 Every 6 Months, 16 Every 12 Months, 17 Every 24 Months, 18 Every 36 Months), cycle.price, cycle.setup (setup fee). cycle.id is required to change cycles: pass an existing cycle id to update that cycle, or null to add a new one. Example: cycle.id [null], cycle.cycle [5], cycle.price [10], cycle.setup [0] adds a Monthly $10 cycle with no setup fee. Existing cycles whose id is not listed in cycle.id are deleted; omit all cycle fields to leave cycles unchanged. Also optional: theme (order page theme: 1 = ecommerce view, 2 = simple), qty (stock quantity), is_outofstock (0 or 1), and digital_delivery settings. digital_delivery supports delivery_enabled, download_policy (open, cap_limited, or time_limited), max_downloads, link_expiry_hours, watermark_pdfs, licensing_enabled, activation_limit, customer_license_management, maximum_reissues, enforce_domain, enforce_ip, enforce_installation_path, license_key_prefix, license_key_length, and offline_cache_minutes.', requiredBodyParams: ['id', 'group_id', 'name'] },
   { path: 'ticket/create', description: 'Create a support ticket. Required body: subject, user_id (customer id), message, support_department. Optional: priority (one of low, medium, high, emergency), status (one of open, pending, close, awaiting_reply), assignee_by (staff user id).', requiredBodyParams: ['subject', 'user_id', 'message', 'support_department'] },
   { path: 'ticket/reply', description: 'Reply to a support ticket. Required body: id (ticket id), message.', requiredBodyParams: ['id', 'message'] },
-  { path: 'ticket/update', description: 'Update a support ticket: change status, priority, subject, department, or assignee. Required body: id (ticket id). Optional: subject, user_id, status (one of open, pending, close, awaiting_reply), priority (one of low, medium, high, emergency), support_department, assignee_by.', requiredBodyParams: ['id'] }
+  { path: 'ticket/update', description: 'Update a support ticket: change status, priority, subject, department, or assignee. Required body: id (ticket id). Optional: subject, user_id, status (one of open, pending, close, awaiting_reply), priority (one of low, medium, high, emergency), support_department, assignee_by.', requiredBodyParams: ['id'] },
+  { path: 'license/activate', description: 'Activate a software license for a device or server installation. Required body: license_key, instance (stable device UUID or server installation identifier), instance_type (device or server). Optional: domain and installation_path (both required by the API for server activations), device_name, operating_system, application_version. This endpoint authenticates with the license key rather than the BillingServ bearer token.', requiredBodyParams: ['license_key', 'instance', 'instance_type'], authenticated: false },
+  { path: 'license/validate', description: 'Validate an existing software license activation and refresh its last-check timestamp. A valid response includes a short-lived Ed25519-signed offline token. Required body: license_key, instance. Optional: domain, installation_path, application_version. This endpoint authenticates with the license key rather than the BillingServ bearer token.', requiredBodyParams: ['license_key', 'instance'], authenticated: false },
+  { path: 'license/deactivate', description: 'Deactivate a software license installation and release its activation slot. Required body: license_key, instance. This endpoint authenticates with the license key rather than the BillingServ bearer token.', requiredBodyParams: ['license_key', 'instance'], authenticated: false }
 ] as const satisfies readonly WriteEndpointDefinition[];
 
 const endpointPaths = ENDPOINTS.map((endpoint) => endpoint.path) as [
@@ -138,14 +142,14 @@ const timeoutMs = parseTimeout(process.env.BILLINGSERV_TIMEOUT_MS);
 const server = new McpServer(
   {
     name: 'billingserv',
-    version: '0.1.8'
+    version: '0.1.9'
   },
   {
     instructions:
-      'This server is the authoritative, live source for all BillingServ billing data: customers, invoices, payments, transactions, orders, subscriptions, packages, discounts, support tickets, usage meters, tax settings, staff, and sales/revenue reports. ' +
+      'This server is the authoritative, live source for all BillingServ billing data: customers, invoices, payments, transactions, orders, subscriptions, packages, discounts, support tickets, usage meters, tax settings, staff, software licenses, and sales/revenue reports. ' +
       'For ANY question about billing, invoices (paid, unpaid, overdue), customers, orders, support tickets, revenue, or account data, use these tools instead of searching local files or databases. ' +
       'Start with billingserv_list_endpoints to discover available endpoints and their required parameters, then call billingserv_get to read data. ' +
-      'To create or update support tickets, orders, customers, invoices, quotes, discounts, packages, package groups, and package options, or to send an invoice or payment reminder, use billingserv_create. Always confirm the details with the user before creating, updating, or sending anything.'
+      'To create or update support tickets, orders, customers, invoices, quotes, discounts, packages, package groups, package options, and software license activations, or to send an invoice or payment reminder, use billingserv_create. Always confirm the details with the user before creating, updating, sending, activating, or deactivating anything.'
   }
 );
 
@@ -154,7 +158,7 @@ server.registerTool(
   {
     title: 'List BillingServ endpoints',
     description:
-      'List every BillingServ billing API endpoint available through this server, with descriptions and required parameters. Read endpoints cover customers, invoices, payments, orders, packages, discounts, support tickets, usage meters, settings, and sales/revenue reports. Write endpoints cover creating and updating tickets, orders, customers, invoices, quotes, discounts, packages, package groups, and package options, and sending invoices and payment reminders.',
+      'List every BillingServ billing API endpoint available through this server, with descriptions and required parameters. Read endpoints cover customers, invoices, payments, orders, packages, discounts, support tickets, usage meters, settings, and sales/revenue reports. Write endpoints cover creating and updating tickets, orders, customers, invoices, quotes, discounts, packages, package groups, package options, and software license activations, and sending invoices and payment reminders.',
     inputSchema: z.object({})
   },
   async () => ({
@@ -213,8 +217,8 @@ server.registerTool(
   {
     title: 'Create or update BillingServ records',
     description:
-      'Create or update records in BillingServ: support tickets and ticket replies, orders, customers, customer notes, invoices, quotes, discounts, packages, package groups, and package options. Can also send an invoice or payment reminder to a customer by email. ' +
-      'This tool changes real billing data and can email customers, so confirm the details with the user before calling it. ' +
+      'Create or update records in BillingServ: support tickets and ticket replies, orders, customers, customer notes, invoices, quotes, discounts, packages, package groups, package options, and software license activations. Can also validate or deactivate a license and send an invoice or payment reminder to a customer by email. ' +
+      'This tool changes real billing or licensing data and can email customers, so confirm the details with the user before calling it. ' +
       'Only allowlisted endpoints can be called; deleting records and capturing payments are not available through this server.',
     inputSchema: z.object({
       endpoint: z.enum(writeEndpointPaths).describe('Allowlisted BillingServ write endpoint, relative to /api/v2. All write endpoints use POST.'),
@@ -236,7 +240,11 @@ server.registerTool(
       }
     }
 
-    const response = await callBillingServ(endpoint, {}, { method: 'POST', body: expandDottedKeys(body) });
+    const response = await callBillingServ(endpoint, {}, {
+      method: 'POST',
+      body: expandDottedKeys(body),
+      authenticated: endpointDefinition.authenticated
+    });
 
     return {
       content: [
@@ -252,6 +260,7 @@ server.registerTool(
 type RequestOptions = {
   method?: 'GET' | 'POST';
   body?: Record<string, unknown>;
+  authenticated?: boolean;
 };
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
@@ -320,8 +329,8 @@ async function callBillingServ(endpoint: string, query: QueryParams, options: Re
         method,
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-          'User-Agent': 'BillingServ-MCP/0.1.8',
+          ...(options.authenticated === false ? {} : { Authorization: `Bearer ${apiKey}` }),
+          'User-Agent': 'BillingServ-MCP/0.1.9',
           ...(options.body ? { 'Content-Type': 'application/json' } : {})
         },
         body: options.body ? JSON.stringify(options.body) : undefined,

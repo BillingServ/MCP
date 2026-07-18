@@ -1,6 +1,6 @@
 {
   "name": "@billingserv/mcp-server",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "MCP server for the BillingServ API.",
   "mcpName": "com.billingserv/mcp",
   "keywords": [

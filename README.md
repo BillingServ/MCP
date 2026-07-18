@@ -2,11 +2,12 @@
 
 Connect AI assistants like Claude, ChatGPT (Codex), Cursor, and Gemini to your BillingServ account.
 
-This is an [MCP](https://modelcontextprotocol.io) server for the BillingServ API. Once it's set up, your AI assistant can look up customers, invoices, orders, packages, and reports straight from your BillingServ installation. Ask things like:
+This is an [MCP](https://modelcontextprotocol.io) server for the BillingServ API. Once it's set up, your AI assistant can look up customers, invoices, orders, packages, software licenses, and reports straight from your BillingServ installation. Ask things like:
 
 - "Which customers have unpaid invoices this month?"
 - "Show me the revenue trend for this year."
 - "What packages does customer 123 have, and what could they upgrade to?"
+- "Validate this software license activation."
 
 And your assistant answers from live billing data instead of guessing.
 
@@ -177,7 +178,7 @@ Endpoints with placeholders in the path take a `path` object instead:
 
 ### `billingserv_create`
 
-Creates or updates records through an allowlisted set of `POST` endpoints. This is the tool to gate behind approval in your MCP client if you want a confirmation step before anything changes.
+Creates or updates records through an allowlisted set of `POST` endpoints. It also activates, validates, and deactivates software licenses. This is the tool to gate behind approval in your MCP client if you want a confirmation step before anything changes.
 
 ```json
 {
@@ -218,12 +219,35 @@ And these write endpoints, available through `billingserv_create`:
 | Invoices | `invoice/create-invoice`, `invoice/create-quote`, `invoice/send-invoice`, `invoice/send-invoice-reminder` |
 | Packages | `package/create`, `package/update`, `package/group/create`, `package/group/update`, `package/option/create`, `package/option/update` |
 | Marketing | `marketing/create-discount` |
+| Licensing | `license/activate`, `license/validate`, `license/deactivate` |
+
+Package creation and updates support the API's `digital_delivery` object for download policies and software licensing controls. For example:
+
+```json
+{
+  "endpoint": "package/update",
+  "body": {
+    "id": 12,
+    "group_id": 3,
+    "name": "Desktop App",
+    "digital_delivery": {
+      "delivery_enabled": true,
+      "download_policy": "cap_limited",
+      "max_downloads": 5,
+      "licensing_enabled": true,
+      "activation_limit": 2,
+      "offline_cache_minutes": 60
+    }
+  }
+}
+```
 
 ## Security
 
 - The endpoint allowlist is compiled into the server and checked on every request. Only allowlisted endpoints can be called.
 - Sensitive routes like password reset are deliberately left out.
 - Your API key is read from the environment and only ever sent to the base URL you configure. It's never logged or included in tool output.
+- Licensing endpoints use the submitted license key as their credential, as required by the API, so the BillingServ bearer token is not sent to those routes.
 
 ## Development
 

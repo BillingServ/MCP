@@ -1,18 +1,18 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.billingserv/mcp",
-  "description": "MCP server for BillingServ: customers, invoices, orders, packages, and revenue reports.",
+  "description": "MCP server for BillingServ: customers, invoices, orders, packages, software licenses, and revenue reports.",
   "repository": {
     "url": "https://github.com/billingserv/mcp",
     "source": "github"
   },
-  "version": "0.1.8",
+  "version": "0.1.9",
   "websiteUrl": "https://www.billingserv.com",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@billingserv/mcp-server",
-      "version": "0.1.8",
+      "version": "0.1.9",
       "transport": {
         "type": "stdio"
       },

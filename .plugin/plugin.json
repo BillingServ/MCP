@@ -1,7 +1,7 @@
 {
   "name": "billingserv",
-  "description": "Connect AI assistants to BillingServ: customers, invoices, orders, packages, and revenue reports.",
-  "version": "0.1.6",
+  "description": "Connect AI assistants to BillingServ: customers, invoices, orders, packages, software licenses, and revenue reports.",
+  "version": "0.1.9",
   "author": {
     "name": "BillingServ",
     "url": "https://www.billingserv.com"
