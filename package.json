@@ -1,6 +1,6 @@
 {
   "name": "@billingserv/mcp-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "MCP server for the BillingServ API.",
   "mcpName": "com.billingserv/mcp",
   "keywords": [
@@ -32,20 +32,21 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run typecheck && npm run build",
+    "prepublishOnly": "npm run typecheck && npm test",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "start:dev": "node --env-file=.env dist/index.js",
+    "test": "npm run build && node --test test/body.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "zod": "^3.25.0"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "tsx": "^4.20.0",
-    "typescript": "^5.9.0"
+    "@types/node": "^22.20.1",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
   },
   "engines": {
     "node": ">=20"

@@ -3,11 +3,10 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
+import { expandDottedKeys, type BodyParams } from './body.js';
 
 type QueryValue = string | number | boolean | null | undefined;
 type QueryParams = Record<string, QueryValue | QueryValue[]>;
-type BodyValue = QueryValue | QueryValue[];
-type BodyParams = Record<string, BodyValue | Record<string, BodyValue>>;
 
 type EndpointDefinition = {
   path: string;
@@ -142,7 +141,7 @@ const timeoutMs = parseTimeout(process.env.BILLINGSERV_TIMEOUT_MS);
 const server = new McpServer(
   {
     name: 'billingserv',
-    version: '0.1.9'
+    version: '0.2.1'
   },
   {
     instructions:
@@ -263,44 +262,6 @@ type RequestOptions = {
   authenticated?: boolean;
 };
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-// The BillingServ API (Laravel) reads parallel-array fields like cycle.cycle or record.item
-// as nested structures, so dotted keys must be sent as {"cycle": {"cycle": [...]}} in JSON.
-function expandDottedKeys(body: BodyParams): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-
-  for (const [key, value] of Object.entries(body)) {
-    const parts = key.split('.').filter((part) => part !== '');
-
-    if (parts.length === 0) {
-      continue;
-    }
-
-    let target = result;
-
-    for (const part of parts.slice(0, -1)) {
-      if (!isPlainObject(target[part])) {
-        target[part] = {};
-      }
-
-      target = target[part] as Record<string, unknown>;
-    }
-
-    const leaf = parts[parts.length - 1];
-
-    if (isPlainObject(value) && isPlainObject(target[leaf])) {
-      Object.assign(target[leaf] as Record<string, unknown>, value);
-    } else {
-      target[leaf] = value;
-    }
-  }
-
-  return result;
-}
-
 async function callBillingServ(endpoint: string, query: QueryParams, options: RequestOptions = {}): Promise<unknown> {
   const url = new URL(`${baseUrl}/${endpoint.replace(/^\/+/, '')}`);
 
@@ -330,7 +291,7 @@ async function callBillingServ(endpoint: string, query: QueryParams, options: Re
         headers: {
           Accept: 'application/json',
           ...(options.authenticated === false ? {} : { Authorization: `Bearer ${apiKey}` }),
-          'User-Agent': 'BillingServ-MCP/0.1.9',
+          'User-Agent': 'BillingServ-MCP/0.2.1',
           ...(options.body ? { 'Content-Type': 'application/json' } : {})
         },
         body: options.body ? JSON.stringify(options.body) : undefined,
