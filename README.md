@@ -1,8 +1,8 @@
 # BillingServ MCP Server
 
-Connect AI assistants like Claude, ChatGPT (Codex), Cursor, and Gemini to your BillingServ account.
+The [BillingServ MCP server](https://www.billingserv.com/mcp/) connects AI assistants like Claude, ChatGPT (Codex), Cursor, and Gemini to your BillingServ account.
 
-This is an [MCP](https://modelcontextprotocol.io) server for the BillingServ API. Once it's set up, your AI assistant can look up customers, invoices, orders, packages, software licenses, and reports straight from your BillingServ installation. Ask things like:
+It provides [Model Context Protocol (MCP)](https://modelcontextprotocol.io) access to the BillingServ API. Once it's set up, your AI assistant can look up customers, invoices, orders, packages, software licenses, and reports straight from your BillingServ installation. Ask things like:
 
 - "Which customers have unpaid invoices this month?"
 - "Show me the revenue trend for this year."
