@@ -141,7 +141,7 @@ const timeoutMs = parseTimeout(process.env.BILLINGSERV_TIMEOUT_MS);
 const server = new McpServer(
   {
     name: 'billingserv',
-    version: '0.2.1'
+    version: '0.2.2'
   },
   {
     instructions:
@@ -291,7 +291,7 @@ async function callBillingServ(endpoint: string, query: QueryParams, options: Re
         headers: {
           Accept: 'application/json',
           ...(options.authenticated === false ? {} : { Authorization: `Bearer ${apiKey}` }),
-          'User-Agent': 'BillingServ-MCP/0.2.1',
+          'User-Agent': 'BillingServ-MCP/0.2.2',
           ...(options.body ? { 'Content-Type': 'application/json' } : {})
         },
         body: options.body ? JSON.stringify(options.body) : undefined,
